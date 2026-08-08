@@ -57,39 +57,44 @@
 	}
 </script>
 
-<div class="flex h-full flex-col gap-1">
-	<div class="flex shrink-0 items-center justify-between gap-2 font-mono text-[10px]">
+<div class="flex h-full flex-col gap-2.5">
+	<div class="flex shrink-0 items-center justify-between gap-2">
 		<div class="flex items-center gap-2">
 			<input
 				type="search"
-				placeholder="filter"
-				class="w-28 rounded-none border border-btop-line bg-btop-meter/50 px-1.5 py-0.5 text-btop-fg outline-none placeholder:text-btop-dim focus:border-btop-cpu"
+				placeholder="Filter processes…"
+				class="h-8 w-40 rounded-lg border border-app-border bg-app-card2 px-3 text-xs text-app-fg outline-none placeholder:text-app-mute focus:border-metric-proc"
 				bind:value={query}
 			/>
 			<button
-				class="rounded-none border border-btop-line px-1.5 py-0.5 text-btop-dim transition-colors hover:text-btop-title {tree
-					? 'border-btop-cpu text-btop-title'
-					: ''}"
+				class="h-8 rounded-lg border border-app-border px-2.5 text-xs font-medium transition-colors {tree
+					? 'border-metric-proc bg-metric-proc/10 text-metric-proc'
+					: 'text-app-dim hover:text-app-fg'}"
 				onclick={() => (tree = !tree)}>tree</button
 			>
 		</div>
-		<span class="text-btop-dim">cpu {formatPercent(totalCpu)}</span>
+		<span class="text-xs text-app-mute"
+			>cpu <span class="font-semibold text-app-fg tabular-nums">{formatPercent(totalCpu)}</span
+			></span
+		>
 	</div>
 
-	<div class="min-h-0 flex-1 overflow-auto border border-btop-line">
-		<table class="w-full border-collapse font-mono text-[10px]">
-			<thead class="sticky top-0 z-10 bg-btop-bg text-btop-dim">
-				<tr class="border-b border-btop-line">
+	<div class="min-h-0 flex-1 overflow-auto rounded-xl border border-app-border">
+		<table class="w-full border-collapse text-xs">
+			<thead class="sticky top-0 z-10 bg-app-card text-app-mute">
+				<tr class="border-b border-app-border">
 					{#each headers as header (header.label)}
 						<th
-							class="cursor-pointer px-1.5 py-0.5 font-normal uppercase transition-colors select-none hover:text-btop-title {header.align} {header.key ===
+							class="cursor-pointer px-3 py-2 text-[10px] font-medium tracking-wide uppercase transition-colors select-none hover:text-app-fg {header.align} {header.key ===
 							'name'
 								? 'w-full'
 								: ''}"
 							onclick={() => toggleSort(header.key)}
 						>
 							{header.label}
-							{#if sortKey === header.key}{sortDir === 'asc' ? '↑' : '↓'}{/if}
+							{#if sortKey === header.key}
+								<span class="text-metric-proc">{sortDir === 'asc' ? '↑' : '↓'}</span>
+							{/if}
 						</th>
 					{/each}
 				</tr>
@@ -97,22 +102,33 @@
 			<tbody>
 				{#each visible as entry (entry.pid)}
 					<tr
-						class="border-b border-btop-line/60 hover:bg-btop-meter/30"
+						class="border-b border-app-border/60 transition-colors hover:bg-app-card2"
 						title={entry.cmd}
-						style:color={gradientStop(entry.cpu_percent, '#80d0a3', '#dcd179', '#d45454')}
 					>
-						<td class="px-1.5 py-[1px] text-right text-btop-dim">{entry.pid}</td>
-						<td class="max-w-24 truncate px-1.5 py-[1px]">{entry.user}</td>
-						<td class="px-1.5 py-[1px] text-right">{entry.nice}</td>
-						<td class="px-1.5 py-[1px] text-center">{entry.state}</td>
-						<td class="px-1.5 py-[1px] text-right">{entry.cpu_percent.toFixed(1)}</td>
-						<td class="px-1.5 py-[1px] text-right"
-							>{totalMem > 0 ? memPct(entry).toFixed(1) : formatBytes(entry.mem)}</td
-						>
-						<td class="px-1.5 py-[1px] text-right">{formatJiffies(entry.cpu_time)}</td>
+						<td class="px-3 py-1 text-right text-app-mute tabular-nums">{entry.pid}</td>
+						<td class="max-w-24 truncate px-3 py-1 text-app-fg">{entry.user}</td>
+						<td class="px-3 py-1 text-right text-app-fg tabular-nums">{entry.nice}</td>
+						<td class="px-3 py-1 text-center text-app-fg">{entry.state}</td>
 						<td
-							class="px-1.5 py-[1px]"
-							style:padding-left={`${Math.min(entry.depth, 10) * 0.6 + 0.375}rem`}
+							class="px-3 py-1 text-right font-semibold tabular-nums"
+							style:color={gradientStop(entry.cpu_percent, '#34d399', '#f5b455', '#f43f5e')}
+							>{entry.cpu_percent.toFixed(1)}</td
+						>
+						<td
+							class="px-3 py-1 text-right tabular-nums"
+							style:color={gradientStop(
+								memPct(entry) > 0 ? Math.min(memPct(entry) * 5, 100) : 0,
+								'#34d399',
+								'#f5b455',
+								'#f43f5e'
+							)}>{totalMem > 0 ? memPct(entry).toFixed(1) : formatBytes(entry.mem)}</td
+						>
+						<td class="px-3 py-1 text-right text-app-fg tabular-nums"
+							>{formatJiffies(entry.cpu_time)}</td
+						>
+						<td
+							class="px-3 py-1 text-app-fg"
+							style:padding-left={`${Math.min(entry.depth, 10) * 1.2 + 0.75}rem`}
 						>
 							{entry.name}
 						</td>

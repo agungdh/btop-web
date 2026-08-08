@@ -15,55 +15,57 @@
 	const swapPct = $derived((mem.stats.swap_used / Math.max(mem.stats.swap_total, 1)) * 100);
 </script>
 
-<div class="flex h-full min-h-0 flex-col gap-1 overflow-y-auto">
-	<div class="h-12 min-w-0">
-		<Chart values={usedHistory} max={100} height={48} color="#d9626d" />
+<div class="flex h-full min-h-0 flex-col gap-3 overflow-y-auto">
+	<div class="h-12">
+		<Chart values={usedHistory} max={100} height={48} color="#f43f5e" />
 	</div>
-	<div class="flex items-baseline justify-between font-mono text-[10px]">
-		<span class="text-btop-title">Total</span>
-		<span class="text-btop-dim">{formatBytes(totalBytes)}</span>
+
+	<div class="flex items-baseline justify-between">
+		<div class="text-[11px] font-medium text-app-dim">Total memory</div>
+		<div class="text-sm font-semibold text-app-fg tabular-nums">{formatBytes(totalBytes)}</div>
 	</div>
-	<div class="flex flex-col gap-0.5">
+
+	<div class="flex flex-col gap-2.5">
 		<Meter
 			value={usedPct}
 			label="used"
-			start="#592b26"
-			mid="#d9626d"
-			end="#ff4769"
+			start="#f43f5e"
+			mid="#f43f5e"
+			end="#f43f5e"
 			valueText={`${formatBytes(mem.stats.used)} (${formatPercent(usedPct, 1)})`}
 		/>
 		<Meter
 			value={availPct}
 			label="avail"
-			start="#4e3f0e"
-			mid="#ffd77a"
-			end="#ffb814"
+			start="#f59e0b"
+			mid="#f59e0b"
+			end="#f59e0b"
 			valueText={`${formatBytes(mem.stats.available)} (${formatPercent(availPct, 1)})`}
 		/>
 		<Meter
 			value={cachedPct}
 			label="cached"
-			start="#163350"
-			mid="#74e6fc"
-			end="#26c5ff"
+			start="#38bdf8"
+			mid="#38bdf8"
+			end="#38bdf8"
 			valueText={`${formatBytes(mem.stats.cached)} (${formatPercent(cachedPct, 1)})`}
 		/>
 		<Meter
 			value={freePct}
 			label="free"
-			start="#384f21"
-			mid="#b5e685"
-			end="#dcff85"
+			start="#34d399"
+			mid="#34d399"
+			end="#34d399"
 			valueText={`${formatBytes(mem.stats.free)} (${formatPercent(freePct, 1)})`}
 		/>
 		{#if mem.stats.swap_total > 0}
-			<div class="mt-0.5 border-t border-btop-line pt-0.5">
+			<div class="border-t border-app-border pt-2.5">
 				<Meter
 					value={swapPct}
 					label="swap"
-					start="#620665"
-					mid="#7d4180"
-					end="#dcafde"
+					start="#c084fc"
+					mid="#c084fc"
+					end="#c084fc"
 					valueText={`${formatBytes(mem.stats.swap_used)} / ${formatBytes(mem.stats.swap_total)}`}
 				/>
 			</div>

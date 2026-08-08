@@ -12,13 +12,13 @@
 	} = $props();
 </script>
 
-<section class="flex flex-col gap-2 rounded-lg border border-zinc-800 bg-zinc-900/70 p-3">
-	<header class="flex items-baseline justify-between gap-2 border-b border-zinc-800 pb-1.5">
+<section class="flex flex-col gap-3 rounded-2xl border border-app-border bg-app-card p-4">
+	<header class="flex items-baseline justify-between gap-2 border-b border-app-border pb-2">
 		<div class="flex min-w-0 items-baseline gap-2">
-			<h2 class="shrink-0 text-xs font-bold tracking-wider text-zinc-300 uppercase">{title}</h2>
-			{#if subtitle}<span class="truncate text-[10px] text-zinc-500">{subtitle}</span>{/if}
+			<h2 class="shrink-0 text-xs font-semibold tracking-tight text-app-fg">{title}</h2>
+			{#if subtitle}<span class="truncate text-[11px] text-app-mute">{subtitle}</span>{/if}
 		</div>
-		<div class="flex shrink-0 items-center gap-2 text-[10px] text-zinc-500">
+		<div class="flex shrink-0 items-center gap-2 text-[11px] text-app-dim">
 			{@render actions?.()}
 		</div>
 	</header>

@@ -4,7 +4,7 @@
 	let {
 		value,
 		size = 72,
-		color = '#2dd4bf',
+		color = 'var(--color-metric-cpu)',
 		label = '',
 		sublabel = ''
 	} = $props<{
@@ -23,7 +23,14 @@
 
 <div class="flex flex-col items-center gap-1">
 	<svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={label}>
-		<circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#27272a" stroke-width="6" />
+		<circle
+			cx={size / 2}
+			cy={size / 2}
+			r={radius}
+			fill="none"
+			stroke="var(--color-app-card2)"
+			stroke-width="6"
+		/>
 		<circle
 			cx={size / 2}
 			cy={size / 2}
@@ -41,7 +48,7 @@
 			y="50%"
 			text-anchor="middle"
 			dominant-baseline="central"
-			fill="#e4e4e7"
+			fill="var(--color-app-fg)"
 			font-size={size / 3.6}
 			font-weight="700"
 		>
@@ -49,9 +56,9 @@
 		</text>
 	</svg>
 	{#if label}
-		<div class="text-[10px] leading-none text-zinc-400">{label}</div>
+		<div class="text-[10px] leading-none text-app-dim">{label}</div>
 	{/if}
 	{#if sublabel}
-		<div class="text-[10px] leading-none text-zinc-600">{sublabel}</div>
+		<div class="text-[10px] leading-none text-app-mute">{sublabel}</div>
 	{/if}
 </div>

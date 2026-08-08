@@ -17,6 +17,8 @@
 		strokeWidth?: number;
 	} = $props();
 
+	const gradientId = `chart-${Math.random().toString(36).slice(2, 10)}`;
+
 	const viewWidth = 600;
 
 	function clampValue(value: number): number {
@@ -46,8 +48,14 @@
 	role="img"
 	aria-label="history chart"
 >
+	<defs>
+		<linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0%" stop-color={color} stop-opacity="0.35" />
+			<stop offset="100%" stop-color={color} stop-opacity="0" />
+		</linearGradient>
+	</defs>
 	{#if area && fill}
-		<polygon points={area} fill={color} opacity="0.15" />
+		<polygon points={area} fill={`url(#${gradientId})`} />
 	{/if}
 	{#if points}
 		<polyline

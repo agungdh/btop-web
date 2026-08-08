@@ -2,43 +2,51 @@
 @plugin '@tailwindcss/typography';
 
 @theme {
-	/* btop default theme (256-color, mapped to hex) */
-	--color-btop-bg: #000000;
-	--color-btop-fg: #dcdcdc;
-	--color-btop-dim: #808080;
-	--color-btop-mute: #4a4a4a;
-	--color-btop-line: #2a2a2a;
-	--color-btop-meter: #333333;
-	--color-btop-title: #eeeeee;
+	/* app chrome */
+	--color-app-bg: #0a0a0c;
+	--color-app-card: #121215;
+	--color-app-card2: #1a1a1f;
+	--color-app-border: #26262d;
+	--color-app-fg: #f2f2f5;
+	--color-app-dim: #9c9ca8;
+	--color-app-mute: #63636e;
 
-	/* box title colors */
-	--color-btop-cpu: #556d59;
-	--color-btop-mem: #6c6c4b;
-	--color-btop-net: #5c588d;
-	--color-btop-disk: #6c6c4b;
-	--color-btop-gpu: #556d59;
-	--color-btop-proc: #805252;
+	/* per-metric accents */
+	--color-metric-cpu: #5b8cff;
+	--color-metric-mem: #a78bfa;
+	--color-metric-net: #2dd4bf;
+	--color-metric-disk: #f5b455;
+	--color-metric-gpu: #f472b6;
+	--color-metric-proc: #fb7185;
 
 	/* meters / graphs */
-	--color-btop-cpu-graph: #77ca9b;
-	--color-btop-mem-used: #d9626d;
-	--color-btop-mem-avail: #ffb814;
-	--color-btop-mem-cached: #26c5ff;
-	--color-btop-mem-free: #b5e685;
-	--color-btop-net-dl: #4f43a3;
-	--color-btop-net-ul: #7d4180;
-	--color-btop-proc-low: #80d0a3;
-	--color-btop-proc-mid: #dcd179;
-	--color-btop-proc-high: #d45454;
-	--color-btop-dl-bright: #b0a9de;
-	--color-btop-ul-bright: #dcafde;
+	--color-mem-used: #f43f5e;
+	--color-mem-avail: #f59e0b;
+	--color-mem-cached: #38bdf8;
+	--color-mem-free: #34d399;
+	--color-net-dl: #2dd4bf;
+	--color-net-ul: #c084fc;
+	--color-proc-low: #34d399;
+	--color-proc-mid: #f5b455;
+	--color-proc-high: #f43f5e;
 }
 
 body {
-	background-color: var(--color-btop-bg);
-	color: var(--color-btop-fg);
+	background-color: var(--color-app-bg);
+	color: var(--color-app-fg);
+	font-family:
+		ui-sans-serif,
+		system-ui,
+		-apple-system,
+		'Segoe UI',
+		Roboto,
+		'Helvetica Neue',
+		Arial,
+		sans-serif;
+	text-rendering: optimizeLegibility;
+	-webkit-tap-highlight-color: transparent;
 }
 
 ::selection {
-	background-color: #6a2f2f;
+	background-color: rgb(91 140 255 / 0.3);
 }

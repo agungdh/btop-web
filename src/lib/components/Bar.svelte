@@ -3,9 +3,9 @@
 
 	let {
 		value,
-		color = 'bg-teal-500',
+		color = 'bg-metric-cpu',
 		height = 'h-1.5',
-		track = 'bg-zinc-800'
+		track = 'bg-app-card2'
 	} = $props<{
 		value: number;
 		color?: string;

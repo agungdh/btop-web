@@ -22,6 +22,7 @@
 	interface PanelConfig extends TabItem {
 		show: boolean;
 		col: string;
+		dot: string;
 	}
 
 	const snapshot = $derived(dashboard.snapshot);
@@ -62,26 +63,26 @@
 			{
 				key: 'cpu',
 				label: 'CPU',
-				text: 'text-btop-cpu',
-				bar: 'bg-btop-cpu',
+				accent: 'metric-cpu',
+				dot: 'bg-metric-cpu',
 				value: formatPercent(cpuPct),
 				show: !!snapshot?.cpu,
-				col: 'md:col-span-8'
+				col: 'md:col-span-12 lg:col-span-8'
 			},
 			{
 				key: 'mem',
 				label: 'MEM',
-				text: 'text-btop-mem',
-				bar: 'bg-btop-mem',
+				accent: 'metric-mem',
+				dot: 'bg-metric-mem',
 				value: formatPercent(memPct),
 				show: !!snapshot?.mem,
-				col: 'md:col-span-4'
+				col: 'md:col-span-12 lg:col-span-4'
 			},
 			{
 				key: 'gpu',
 				label: 'GPU',
-				text: 'text-btop-gpu',
-				bar: 'bg-btop-gpu',
+				accent: 'metric-gpu',
+				dot: 'bg-metric-gpu',
 				value: hasGpu ? formatPercent(gpuPct) : '',
 				show: hasGpu,
 				col: 'md:col-span-4'
@@ -89,8 +90,8 @@
 			{
 				key: 'net',
 				label: 'NET',
-				text: 'text-btop-net',
-				bar: 'bg-btop-net',
+				accent: 'metric-net',
+				dot: 'bg-metric-net',
 				value: snapshot?.net ? formatSpeed(netSpeed) : '',
 				show: !!snapshot?.net,
 				col: 'md:col-span-4'
@@ -98,8 +99,8 @@
 			{
 				key: 'disk',
 				label: 'DISK',
-				text: 'text-btop-disk',
-				bar: 'bg-btop-disk',
+				accent: 'metric-disk',
+				dot: 'bg-metric-disk',
 				value: diskPct > 0 ? `${diskPct}%` : '',
 				show: !!snapshot?.mem && snapshot.mem.disks.length > 0,
 				col: 'md:col-span-4'
@@ -107,8 +108,8 @@
 			{
 				key: 'proc',
 				label: 'PROC',
-				text: 'text-btop-proc',
-				bar: 'bg-btop-proc',
+				accent: 'metric-proc',
+				dot: 'bg-metric-proc',
 				value: snapshot?.proc ? String(procCount) : '',
 				show: !!snapshot?.proc,
 				col: 'md:col-span-12'
@@ -117,7 +118,7 @@
 	);
 
 	const tabs = $derived(
-		panelConfigs.map(({ key, label, text, bar, value }) => ({ key, label, text, bar, value }))
+		panelConfigs.map(({ key, label, accent, value }) => ({ key, label, accent, value }))
 	);
 	const gridPanels = $derived(panelConfigs);
 
@@ -129,41 +130,45 @@
 
 <svelte:head><title>btop · {snapshot?.meta.hostname ?? 'dashboard'}</title></svelte:head>
 
-<main class="flex h-dvh min-h-0 flex-col p-1 font-mono">
+<main class="flex h-dvh min-h-0 flex-col bg-app-bg text-app-fg">
 	{#if snapshot}
 		<Header meta={snapshot.meta} />
 
 		{#snippet boxFor(key: PanelKey)}
 			{#if key === 'cpu' && snapshot.cpu}
-				<BtopBox title="CPU" color="text-btop-cpu">
+				<BtopBox title="CPU" accent="bg-metric-cpu">
 					<CpuPanel cpu={snapshot.cpu} />
 				</BtopBox>
 			{:else if key === 'mem' && snapshot.mem}
-				<BtopBox title="MEM" color="text-btop-mem">
+				<BtopBox title="Memory" accent="bg-metric-mem">
 					<MemPanel mem={snapshot.mem} />
 				</BtopBox>
 			{:else if key === 'gpu' && hasGpu}
-				<BtopBox title="GPU" color="text-btop-gpu">
+				<BtopBox title="GPU" accent="bg-metric-gpu">
 					<GpuPanel gpus={snapshot.gpu ?? []} />
 				</BtopBox>
 			{:else if key === 'net' && snapshot.net}
-				<BtopBox title="NET" color="text-btop-net">
+				<BtopBox title="Network" accent="bg-metric-net">
 					<NetPanel net={snapshot.net} />
 				</BtopBox>
 			{:else if key === 'disk' && snapshot.mem && snapshot.mem.disks.length > 0}
-				<BtopBox title="DISK" color="text-btop-disk">
+				<BtopBox title="Storage" accent="bg-metric-disk">
 					<DiskPanel disks={snapshot.mem.disks} />
 				</BtopBox>
 			{:else if key === 'proc' && snapshot.proc}
-				<BtopBox title="PROC" color="text-btop-proc">
-					{#snippet right()}<span>{snapshot.proc?.count}</span>{/snippet}
+				<BtopBox title="Processes" accent="bg-metric-proc">
+					{#snippet right()}
+						<span class="rounded-full bg-app-card2 px-2 py-0.5 text-[10px] font-medium text-app-dim"
+							>{snapshot.proc?.count}</span
+						>
+					{/snippet}
 					<ProcPanel proc={snapshot.proc!} totalMem={memTotal} />
 				</BtopBox>
 			{/if}
 		{/snippet}
 
 		<div
-			class="grid hidden min-h-0 flex-1 grid-cols-12 grid-rows-[minmax(0,1.15fr)_minmax(0,0.8fr)_minmax(0,1.5fr)] gap-1 md:grid"
+			class="grid hidden min-h-0 flex-1 grid-cols-12 grid-rows-[minmax(0,1.1fr)_minmax(0,0.8fr)_minmax(0,1.6fr)] gap-3 p-3 md:grid"
 		>
 			{#each gridPanels as panel (panel.key)}
 				<div class="min-h-0 {panel.col}">
@@ -172,24 +177,26 @@
 			{/each}
 		</div>
 
-		<div class="min-h-0 flex-1 md:hidden">
+		<div class="min-h-0 flex-1 p-3 md:hidden">
 			{@render boxFor(activeKey as PanelKey)}
 		</div>
 
 		<TabBar items={tabs} active={activeKey} onselect={(key) => (active = key as PanelKey)} />
 	{:else}
-		<div
-			class="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 text-center font-mono"
-		>
-			<div class="text-2xl font-bold text-btop-cpu">btop</div>
-			<p class="max-w-md text-[11px] text-btop-dim">
-				waiting for the btop http api on <span class="text-btop-title">127.0.0.1:8080</span>.
+		<div class="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 p-6 text-center">
+			<div class="flex items-center gap-2">
+				<span class="size-2 animate-pulse rounded-full bg-metric-cpu"></span>
+				<span class="text-lg font-bold tracking-tight text-app-fg">btop</span>
+			</div>
+			<p class="max-w-md text-sm text-app-dim">
+				Waiting for the btop HTTP API on
+				<span class="font-medium text-app-fg">127.0.0.1:8080</span>.
 				<br />
-				start it with <span class="text-btop-title">btop --http</span> or set
-				<span class="text-btop-title">VITE_BTOP_API_URL</span>.
+				Start it with <span class="font-medium text-app-fg">btop --http</span> or set
+				<span class="font-medium text-app-fg">VITE_BTOP_API_URL</span>.
 			</p>
 			{#if dashboard.error}
-				<p class="text-[11px] text-btop-proc-high">{dashboard.error}</p>
+				<p class="text-xs text-proc-high">{dashboard.error}</p>
 			{/if}
 		</div>
 	{/if}
