@@ -1,6 +1,8 @@
 import type { BtopSnapshot, HealthResponse, IndexResponse } from './types';
 
-const DEFAULT_BASE_URL = 'http://127.0.0.1:8080';
+//? Empty base = same-origin. When btop serves the app and its API from the same
+//? server/port, relative URLs adapt automatically regardless of the bind address.
+const DEFAULT_BASE_URL = '';
 
 export function getBaseUrl(): string {
 	const fromEnv = import.meta.env.VITE_BTOP_API_URL as string | undefined;

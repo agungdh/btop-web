@@ -189,8 +189,7 @@
 				<span class="text-lg font-bold tracking-tight text-app-fg">btop</span>
 			</div>
 			<p class="max-w-md text-sm text-app-dim">
-				Waiting for the btop HTTP API on
-				<span class="font-medium text-app-fg">127.0.0.1:8080</span>.
+				Waiting for the btop HTTP API on this server.
 				<br />
 				Start it with <span class="font-medium text-app-fg">btop --http</span> or set
 				<span class="font-medium text-app-fg">VITE_BTOP_API_URL</span>.

@@ -18,6 +18,15 @@ export default defineConfig({
 			adapter: adapter({ fallback: 'index.html' })
 		})
 	],
+	server: {
+		//? In dev the SPA uses relative API paths (same-origin). Proxy them to a local btop
+		//? server so no VITE_BTOP_API_URL is needed. When btop serves the built app itself,
+		//? no proxy is involved — everything is same-origin on btop's own port.
+		proxy: {
+			'/api': 'http://127.0.0.1:8080',
+			'/healthz': 'http://127.0.0.1:8080'
+		}
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [
