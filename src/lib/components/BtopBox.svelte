@@ -13,7 +13,7 @@
 </script>
 
 <div
-	class="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-app-border bg-app-card shadow-[inset_0_1px_0_0_rgb(255_255_255_/_0.04)]"
+	class="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-app-border bg-app-card shadow-[inset_0_1px_0_0_rgb(255_255_255_/_0.04)]"
 >
 	<header class="flex shrink-0 items-center justify-between gap-2 px-4 pt-3 pb-2">
 		<div class="flex min-w-0 items-center gap-2">

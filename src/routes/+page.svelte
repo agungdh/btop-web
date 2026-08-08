@@ -67,7 +67,7 @@
 				dot: 'bg-metric-cpu',
 				value: formatPercent(cpuPct),
 				show: !!snapshot?.cpu,
-				col: 'md:col-span-12 lg:col-span-8'
+				col: 'col-span-12 row-span-2 md:col-span-8'
 			},
 			{
 				key: 'mem',
@@ -76,7 +76,7 @@
 				dot: 'bg-metric-mem',
 				value: formatPercent(memPct),
 				show: !!snapshot?.mem,
-				col: 'md:col-span-12 lg:col-span-4'
+				col: 'col-span-12 md:col-span-4'
 			},
 			{
 				key: 'gpu',
@@ -85,7 +85,7 @@
 				dot: 'bg-metric-gpu',
 				value: hasGpu ? formatPercent(gpuPct) : '',
 				show: hasGpu,
-				col: 'md:col-span-4'
+				col: 'col-span-12 md:col-span-4'
 			},
 			{
 				key: 'net',
@@ -94,7 +94,7 @@
 				dot: 'bg-metric-net',
 				value: snapshot?.net ? formatSpeed(netSpeed) : '',
 				show: !!snapshot?.net,
-				col: 'md:col-span-4'
+				col: 'col-span-12 md:col-span-6'
 			},
 			{
 				key: 'disk',
@@ -103,7 +103,7 @@
 				dot: 'bg-metric-disk',
 				value: diskPct > 0 ? `${diskPct}%` : '',
 				show: !!snapshot?.mem && snapshot.mem.disks.length > 0,
-				col: 'md:col-span-4'
+				col: 'col-span-12 md:col-span-6'
 			},
 			{
 				key: 'proc',
@@ -112,7 +112,7 @@
 				dot: 'bg-metric-proc',
 				value: snapshot?.proc ? String(procCount) : '',
 				show: !!snapshot?.proc,
-				col: 'md:col-span-12'
+				col: 'col-span-12'
 			}
 		].filter((panel) => panel.show)
 	);
@@ -168,7 +168,7 @@
 		{/snippet}
 
 		<div
-			class="grid hidden min-h-0 flex-1 grid-cols-12 grid-rows-[minmax(0,1.1fr)_minmax(0,0.8fr)_minmax(0,1.6fr)] gap-3 p-3 md:grid"
+			class="grid hidden min-h-0 flex-1 grid-cols-12 grid-rows-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.8fr)_minmax(0,1.1fr)] gap-3 p-3 md:grid"
 		>
 			{#each gridPanels as panel (panel.key)}
 				<div class="min-h-0 {panel.col}">
