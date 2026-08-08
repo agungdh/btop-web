@@ -15,7 +15,7 @@
 	const swapPct = $derived((mem.stats.swap_used / Math.max(mem.stats.swap_total, 1)) * 100);
 </script>
 
-<div class="flex h-full flex-col gap-1">
+<div class="flex h-full min-h-0 flex-col gap-1 overflow-y-auto">
 	<div class="h-12 min-w-0">
 		<Chart values={usedHistory} max={100} height={48} color="#d9626d" />
 	</div>

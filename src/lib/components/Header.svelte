@@ -20,8 +20,8 @@
 >
 	<div class="flex min-w-0 items-center gap-2">
 		<span class="font-bold text-btop-cpu">btop</span>
-		<span class="text-btop-dim">v{meta.version}</span>
-		<span class="text-btop-dim">@{meta.hostname}</span>
+		<span class="hidden text-btop-dim sm:inline">v{meta.version}</span>
+		<span class="min-w-0 truncate text-btop-dim">@{meta.hostname}</span>
 		<span class="hidden truncate text-btop-dim md:inline">{meta.cpu_name}</span>
 		<span class="text-btop-dim">up {formatUptime(meta.uptime)}</span>
 	</div>
@@ -36,7 +36,7 @@
 			<span class={status.color}>{status.text}</span>
 		</div>
 		{#if dashboard.lastUpdated}
-			<span class="text-btop-dim"
+			<span class="hidden text-btop-dim sm:inline"
 				>{formatTimestamp(new Date(dashboard.lastUpdated).toISOString())}</span
 			>
 		{/if}

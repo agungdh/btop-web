@@ -13,7 +13,7 @@
 	);
 </script>
 
-<div class="flex h-full flex-col gap-1.5">
+<div class="flex h-full min-h-0 flex-col gap-1.5 overflow-y-auto">
 	<div class="flex min-h-0 flex-1 gap-2">
 		<div class="min-w-0 flex-1">
 			<Chart values={total} max={100} height={96} color="#77ca9b" />
