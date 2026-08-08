@@ -12,7 +12,7 @@
 	let { gpus }: { gpus: GpuSection[] } = $props();
 </script>
 
-<div class="flex h-full flex-col gap-3 overflow-y-auto">
+<div class="flex h-full flex-col gap-2.5">
 	{#if gpus.length === 0}
 		<div class="flex flex-1 items-center justify-center text-xs text-app-mute">no gpu</div>
 	{/if}
@@ -22,7 +22,7 @@
 
 			<div class="flex items-center gap-3">
 				<div
-					class="w-14 shrink-0 text-right text-2xl leading-none font-semibold text-app-fg tabular-nums"
+					class="w-14 shrink-0 text-right text-xl leading-none font-semibold text-app-fg tabular-nums"
 				>
 					{formatPercent(gpu.utilization)}
 				</div>
@@ -49,11 +49,12 @@
 					start="#38bdf8"
 					mid="#38bdf8"
 					end="#38bdf8"
+					height={5}
 					valueText={`${formatBytes(gpu.vram_used)} / ${formatBytes(gpu.vram_total)}`}
 				/>
 			{/if}
 
-			<div class="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
+			<div class="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] sm:grid-cols-4">
 				{#if gpu.temp > 0}
 					<div class="flex justify-between">
 						<span class="text-app-mute">Temp</span>

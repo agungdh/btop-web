@@ -94,7 +94,7 @@
 				dot: 'bg-metric-net',
 				value: snapshot?.net ? formatSpeed(netSpeed) : '',
 				show: !!snapshot?.net,
-				col: 'col-span-12 md:col-span-6'
+				col: 'col-span-12'
 			},
 			{
 				key: 'disk',
@@ -103,7 +103,7 @@
 				dot: 'bg-metric-disk',
 				value: diskPct > 0 ? `${diskPct}%` : '',
 				show: !!snapshot?.mem && snapshot.mem.disks.length > 0,
-				col: 'col-span-12 md:col-span-6'
+				col: 'col-span-12'
 			},
 			{
 				key: 'proc',
@@ -168,7 +168,7 @@
 		{/snippet}
 
 		<div
-			class="grid hidden min-h-0 flex-1 grid-cols-12 grid-rows-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.8fr)_minmax(0,1.1fr)] gap-3 p-3 md:grid"
+			class="grid hidden min-h-0 flex-1 grid-cols-12 grid-rows-[minmax(0,1.25fr)_minmax(0,1.25fr)_minmax(0,0.8fr)_minmax(0,0.8fr)_minmax(0,1.3fr)] gap-3 p-3 md:grid"
 		>
 			{#each gridPanels as panel (panel.key)}
 				<div class="min-h-0 {panel.col}">

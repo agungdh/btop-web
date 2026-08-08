@@ -15,23 +15,24 @@
 	const swapPct = $derived((mem.stats.swap_used / Math.max(mem.stats.swap_total, 1)) * 100);
 </script>
 
-<div class="flex h-full min-h-0 flex-col gap-3 overflow-y-auto">
-	<div class="h-12">
-		<Chart values={usedHistory} max={100} height={48} color="#f43f5e" />
+<div class="flex h-full flex-col gap-2.5">
+	<div class="h-8">
+		<Chart values={usedHistory} max={100} height={32} color="#f43f5e" />
 	</div>
 
 	<div class="flex items-baseline justify-between">
 		<div class="text-[11px] font-medium text-app-dim">Total memory</div>
-		<div class="text-sm font-semibold text-app-fg tabular-nums">{formatBytes(totalBytes)}</div>
+		<div class="text-[13px] font-semibold text-app-fg tabular-nums">{formatBytes(totalBytes)}</div>
 	</div>
 
-	<div class="flex flex-col gap-2.5">
+	<div class="flex flex-col gap-2">
 		<Meter
 			value={usedPct}
 			label="used"
 			start="#f43f5e"
 			mid="#f43f5e"
 			end="#f43f5e"
+			height={5}
 			valueText={`${formatBytes(mem.stats.used)} (${formatPercent(usedPct, 1)})`}
 		/>
 		<Meter
@@ -40,6 +41,7 @@
 			start="#f59e0b"
 			mid="#f59e0b"
 			end="#f59e0b"
+			height={5}
 			valueText={`${formatBytes(mem.stats.available)} (${formatPercent(availPct, 1)})`}
 		/>
 		<Meter
@@ -48,6 +50,7 @@
 			start="#38bdf8"
 			mid="#38bdf8"
 			end="#38bdf8"
+			height={5}
 			valueText={`${formatBytes(mem.stats.cached)} (${formatPercent(cachedPct, 1)})`}
 		/>
 		<Meter
@@ -56,16 +59,18 @@
 			start="#34d399"
 			mid="#34d399"
 			end="#34d399"
+			height={5}
 			valueText={`${formatBytes(mem.stats.free)} (${formatPercent(freePct, 1)})`}
 		/>
 		{#if mem.stats.swap_total > 0}
-			<div class="border-t border-app-border pt-2.5">
+			<div class="border-t border-app-border pt-2">
 				<Meter
 					value={swapPct}
 					label="swap"
 					start="#c084fc"
 					mid="#c084fc"
 					end="#c084fc"
+					height={5}
 					valueText={`${formatBytes(mem.stats.swap_used)} / ${formatBytes(mem.stats.swap_total)}`}
 				/>
 			</div>
