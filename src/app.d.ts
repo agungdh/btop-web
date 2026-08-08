@@ -8,16 +8,12 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
-}
 
-interface ImportMetaEnv {
-	//? Base URL of the btop API when the SPA is served separately (standalone/client-server).
-	//? Empty/undefined = same-origin (default when btop serves the bundle itself).
-	readonly VITE_BTOP_API_URL?: string;
-}
-
-interface ImportMeta {
-	readonly env: ImportMetaEnv;
+	interface ImportMetaEnv {
+		//? Base URL of the btop API when the SPA is served separately (standalone/client-server).
+		//? Empty/undefined = same-origin (default when btop serves the bundle itself).
+		readonly VITE_BTOP_API_URL?: string;
+	}
 }
 
 export {};

@@ -4,6 +4,10 @@ permissions:
   contents: write # Required to upload assets to the GitHub Release
 
 on:
+  push:
+    branches:
+      - master
+      - main
   release:
     types: [published]
   workflow_dispatch:
@@ -14,7 +18,7 @@ concurrency:
 
 jobs:
   test:
-    name: typecheck + lint + unit tests
+    name: typecheck + lint + format + unit tests
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -28,6 +32,9 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
+      - name: Format
+        run: bunx prettier --check .
 
       - name: Typecheck
         run: bun run check
@@ -60,7 +67,14 @@ jobs:
       - name: Build
         run: bun run build
 
+      - name: Upload build artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: btop-web
+          path: build
+
       - name: Package
+        if: github.event_name == 'release'
         run: |
           ARCHIVE="btop-web-${VERSION}"
           STAGE="/tmp/stage"
@@ -71,6 +85,7 @@ jobs:
           ls -lh "${ARCHIVE}.tar.gz"
 
       - name: Upload release assets
+        if: github.event_name == 'release'
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release upload "$VERSION" btop-web-${VERSION}.tar.gz btop-web-${VERSION}.tar.gz.sha256 --clobber
