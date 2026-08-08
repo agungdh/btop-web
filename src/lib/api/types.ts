@@ -128,13 +128,31 @@ export interface ProcSection {
 	list: ProcEntry[];
 }
 
+export interface GpuSection {
+	name: string;
+	gpu_percent: Record<string, number[]>;
+	utilization: number;
+	vram_total: number;
+	vram_used: number;
+	temp: number;
+	power_mw: number;
+	power_max_mw: number;
+	power_state: number;
+	gpu_clock_mhz: number;
+	mem_clock_mhz: number;
+	pcie_tx_kbs: number;
+	pcie_rx_kbs: number;
+	encoder_utilization: number;
+	decoder_utilization: number;
+}
+
 export interface BtopSnapshot {
 	meta: Meta;
 	cpu?: CpuSection;
 	mem?: MemSection;
 	net?: NetSection;
 	proc?: ProcSection;
-	gpu?: unknown[];
+	gpu?: GpuSection[];
 }
 
 export interface IndexResponse {

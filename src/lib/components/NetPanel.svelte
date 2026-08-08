@@ -11,43 +11,46 @@
 	);
 </script>
 
-<div class="flex flex-col gap-2">
+<div class="flex h-full flex-col gap-1.5 overflow-y-auto">
 	{#if ifaces.length === 0}
-		<div class="py-6 text-center text-[11px] text-zinc-600">No network interfaces</div>
+		<div class="flex flex-1 items-center justify-center text-[10px] text-btop-dim">
+			no interfaces
+		</div>
 	{/if}
-	{#each ifaces as { name, iface } (name)}
-		<div class="flex flex-col gap-1 rounded border border-zinc-800 bg-zinc-950/50 p-2">
-			<div class="flex items-center justify-between gap-2">
-				<div class="flex items-center gap-2">
-					<span
-						class="inline-block size-1.5 rounded-full {iface.connected
-							? 'bg-emerald-500'
-							: 'bg-zinc-600'}"
-					></span>
-					<span class="text-xs font-semibold text-zinc-200">{name}</span>
-					{#if iface.ipv4}<span class="font-mono text-[10px] text-zinc-500">{iface.ipv4}</span>{/if}
-					{#if iface.ipv6}<span class="hidden font-mono text-[10px] text-zinc-600 md:inline"
-							>{iface.ipv6}</span
-						>{/if}
-				</div>
+	{#each ifaces as { name, iface }, i (name)}
+		<div class="flex flex-col gap-0.5">
+			<div class="flex items-center gap-1.5 font-mono text-[10px]">
+				<span
+					class="inline-block size-1 rounded-full {iface.connected
+						? 'bg-btop-dl-bright'
+						: 'bg-btop-meter'}"
+				></span>
+				<span class="text-btop-title">{name}</span>
+				{#if iface.ipv4}<span class="truncate text-btop-dim">{iface.ipv4}</span>{/if}
 			</div>
-			<div class="grid grid-cols-2 gap-2 pt-1">
-				<div class="flex flex-col rounded bg-zinc-900/70 p-1.5">
-					<span class="text-[9px] tracking-wider text-zinc-600 uppercase">Download</span>
-					<span class="font-mono text-sm text-emerald-400">{formatSpeed(iface.download.speed)}</span
+			<div class="grid grid-cols-2 gap-1.5 pt-0.5">
+				<div class="flex flex-col border border-btop-line px-1.5 py-1">
+					<span class="text-[9px] font-bold text-btop-dl-bright">DOWN</span>
+					<span class="font-mono text-sm leading-tight text-btop-fg"
+						>{formatSpeed(iface.download.speed)}</span
 					>
-					<span class="font-mono text-[10px] text-zinc-500"
+					<span class="font-mono text-[9px] text-btop-dim"
 						>total {formatBytes(iface.download.total)}</span
 					>
 				</div>
-				<div class="flex flex-col rounded bg-zinc-900/70 p-1.5">
-					<span class="text-[9px] tracking-wider text-zinc-600 uppercase">Upload</span>
-					<span class="font-mono text-sm text-rose-400">{formatSpeed(iface.upload.speed)}</span>
-					<span class="font-mono text-[10px] text-zinc-500"
+				<div class="flex flex-col border border-btop-line px-1.5 py-1">
+					<span class="text-[9px] font-bold text-btop-ul-bright">UP</span>
+					<span class="font-mono text-sm leading-tight text-btop-fg"
+						>{formatSpeed(iface.upload.speed)}</span
+					>
+					<span class="font-mono text-[9px] text-btop-dim"
 						>total {formatBytes(iface.upload.total)}</span
 					>
 				</div>
 			</div>
 		</div>
+		{#if i < ifaces.length - 1}
+			<div class="border-t border-btop-line"></div>
+		{/if}
 	{/each}
 </div>

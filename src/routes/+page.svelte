@@ -2,12 +2,13 @@
 	import { onMount } from 'svelte';
 	import { dashboard } from '$lib/api/store.svelte';
 	import Header from '$lib/components/Header.svelte';
-	import StatusBar from '$lib/components/StatusBar.svelte';
+	import BtopBox from '$lib/components/BtopBox.svelte';
 	import CpuPanel from '$lib/components/CpuPanel.svelte';
 	import MemPanel from '$lib/components/MemPanel.svelte';
+	import GpuPanel from '$lib/components/GpuPanel.svelte';
 	import NetPanel from '$lib/components/NetPanel.svelte';
+	import DiskPanel from '$lib/components/DiskPanel.svelte';
 	import ProcPanel from '$lib/components/ProcPanel.svelte';
-	import Panel from '$lib/components/Panel.svelte';
 
 	onMount(() => {
 		dashboard.start();
@@ -15,59 +16,85 @@
 	});
 
 	const snapshot = $derived(dashboard.snapshot);
+	const totalMem = $derived(
+		snapshot?.mem
+			? snapshot.mem.stats.used + snapshot.mem.stats.free + snapshot.mem.stats.cached
+			: 0
+	);
+	const hasGpu = $derived(!!snapshot?.gpu && snapshot.gpu.length > 0);
 </script>
 
 <svelte:head><title>btop · {snapshot?.meta.hostname ?? 'dashboard'}</title></svelte:head>
 
-<main class="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-3 p-4">
+<main class="flex h-dvh min-h-0 flex-col p-1 font-mono">
 	{#if snapshot}
 		<Header meta={snapshot.meta} />
-		<StatusBar />
 
-		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+		<div
+			class="grid min-h-0 flex-1 grid-cols-12 grid-rows-[minmax(0,1.15fr)_minmax(0,0.8fr)_minmax(0,1.5fr)] gap-1"
+		>
 			{#if snapshot.cpu}
-				<div class="md:col-span-2">
-					<Panel title="CPU" subtitle={snapshot.cpu.frequency}>
+				<div class="col-span-12 min-h-0 lg:col-span-8">
+					<BtopBox title="CPU" color="text-btop-cpu">
 						<CpuPanel cpu={snapshot.cpu} />
-					</Panel>
+					</BtopBox>
 				</div>
 			{/if}
 
 			{#if snapshot.mem}
-				<div>
-					<Panel title="Memory" subtitle={`${snapshot.meta.cores} cores`}>
+				<div class="col-span-12 min-h-0 lg:col-span-4">
+					<BtopBox title="MEM" color="text-btop-mem">
 						<MemPanel mem={snapshot.mem} />
-					</Panel>
+					</BtopBox>
+				</div>
+			{/if}
+
+			{#if hasGpu}
+				<div class="col-span-12 min-h-0 md:col-span-4">
+					<BtopBox title="GPU" color="text-btop-gpu">
+						<GpuPanel gpus={snapshot.gpu ?? []} />
+					</BtopBox>
 				</div>
 			{/if}
 
 			{#if snapshot.net}
-				<div>
-					<Panel title="Network">
+				<div class="col-span-12 min-h-0 md:col-span-4">
+					<BtopBox title="NET" color="text-btop-net">
 						<NetPanel net={snapshot.net} />
-					</Panel>
+					</BtopBox>
+				</div>
+			{/if}
+
+			{#if snapshot.mem && snapshot.mem.disks.length}
+				<div class="col-span-12 min-h-0 md:col-span-4">
+					<BtopBox title="DISK" color="text-btop-disk">
+						<DiskPanel disks={snapshot.mem.disks} />
+					</BtopBox>
 				</div>
 			{/if}
 
 			{#if snapshot.proc}
-				<div class="md:col-span-2 xl:col-span-4">
-					<Panel title="Processes" subtitle={`${snapshot.proc.count} total`}>
-						<ProcPanel proc={snapshot.proc} />
-					</Panel>
+				<div class="col-span-12 min-h-0">
+					<BtopBox title="PROC" color="text-btop-proc">
+						{#snippet right()}<span>{snapshot.proc?.count}</span>{/snippet}
+						<ProcPanel proc={snapshot.proc!} {totalMem} />
+					</BtopBox>
 				</div>
 			{/if}
 		</div>
 	{:else}
-		<div class="flex min-h-screen flex-col items-center justify-center gap-3 text-center">
-			<div class="text-4xl font-bold text-zinc-700">btop</div>
-			<p class="max-w-sm text-sm text-zinc-500">
-				Waiting for the btop HTTP API on
-				<code class="text-zinc-300">http://127.0.0.1:8080</code>. Start it with
-				<code class="text-zinc-300">btop --http</code>
-				or set <code class="text-zinc-300">VITE_BTOP_API_URL</code>.
+		<div
+			class="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 text-center font-mono"
+		>
+			<div class="text-2xl font-bold text-btop-cpu">btop</div>
+			<p class="max-w-md text-[11px] text-btop-dim">
+				waiting for the btop http api on <span class="text-btop-title">127.0.0.1:8080</span>.
+				<br />
+				start it with <span class="text-btop-title">btop --http</span> or set
+				<span class="text-btop-title">VITE_BTOP_API_URL</span>.
 			</p>
 			{#if dashboard.error}
-				<p class="text-xs text-rose-400">{dashboard.error}</p>
+				<p class="text-[11px] text-btop-proc-high">{dashboard.error}</p>
 			{/if}
 		</div>
 	{/if}

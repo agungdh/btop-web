@@ -49,3 +49,62 @@ export function formatSigned(value: number): string {
 export function clamp(value: number, min = 0, max = 100): number {
 	return Math.min(Math.max(value, min), max);
 }
+
+export function last(values: number[] | undefined): number {
+	return values && values.length ? values[values.length - 1] : 0;
+}
+
+export function formatJiffies(jiffies: number, clockTicks = 100): string {
+	if (!Number.isFinite(jiffies) || jiffies <= 0) return '—';
+	const totalSec = Math.floor(jiffies / clockTicks);
+	const days = Math.floor(totalSec / 86400);
+	const hours = Math.floor((totalSec % 86400) / 3600);
+	const minutes = Math.floor((totalSec % 3600) / 60);
+	const seconds = totalSec % 60;
+	const hh = String(hours).padStart(2, '0');
+	const mm = String(minutes).padStart(2, '0');
+	const ss = String(seconds).padStart(2, '0');
+	return days > 0 ? `${days}-${hh}:${mm}:${ss}` : `${hh}:${mm}:${ss}`;
+}
+
+export function formatMilliwatts(mw: number): string {
+	return `${(mw / 1000).toFixed(1)} W`;
+}
+
+export function formatKibsPerSec(kibs: number): string {
+	return formatSpeed(kibs * 1024);
+}
+
+export function gradientStop(value: number, start: string, mid: string, end: string): string {
+	if (value < 50) {
+		const t = value / 50;
+		return mixHex(start, mid, t);
+	}
+	const t = (value - 50) / 50;
+	return mixHex(mid, end, t);
+}
+
+function mixHex(a: string, b: string, t: number): string {
+	const pa = hexToRgb(a);
+	const pb = hexToRgb(b);
+	const r = Math.round(pa[0] + (pb[0] - pa[0]) * t);
+	const g = Math.round(pa[1] + (pb[1] - pa[1]) * t);
+	const bl = Math.round(pa[2] + (pb[2] - pa[2]) * t);
+	return `rgb(${r},${g},${bl})`;
+}
+
+function hexToRgb(hex: string): [number, number, number] {
+	const value = hex.replace('#', '');
+	if (value.length === 3) {
+		return [
+			parseInt(value[0] + value[0], 16),
+			parseInt(value[1] + value[1], 16),
+			parseInt(value[2] + value[2], 16)
+		];
+	}
+	return [
+		parseInt(value.slice(0, 2), 16),
+		parseInt(value.slice(2, 4), 16),
+		parseInt(value.slice(4, 6), 16)
+	];
+}

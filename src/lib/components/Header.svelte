@@ -1,28 +1,44 @@
 <script lang="ts">
 	import type { Meta } from '$lib/api/types';
-	import { formatUptime } from '$lib/api/format';
+	import { dashboard } from '$lib/api/store.svelte';
+	import { formatTimestamp, formatUptime } from '$lib/api/format';
 
 	let { meta }: { meta: Meta } = $props();
+
+	const status = $derived(
+		{
+			connected: { dot: 'bg-btop-proc-low', text: 'connected', color: 'text-btop-proc-low' },
+			connecting: { dot: 'bg-btop-dim animate-pulse', text: 'connecting…', color: 'text-btop-dim' },
+			error: { dot: 'bg-btop-proc-high', text: 'error', color: 'text-btop-proc-high' },
+			idle: { dot: 'bg-btop-meter', text: 'idle', color: 'text-btop-dim' }
+		}[dashboard.status]
+	);
 </script>
 
-<header class="flex flex-wrap items-baseline justify-between gap-2 border-b border-zinc-800 pb-3">
-	<div>
-		<h1 class="text-lg font-bold tracking-tight text-zinc-100">
-			<span class="text-teal-400">btop</span>
-			<span class="ml-2 text-sm font-normal text-zinc-400">@{meta.hostname}</span>
-		</h1>
-		<p class="text-[11px] text-zinc-500">
-			{meta.cpu_name}
-			<span class="text-zinc-600">·</span>
-			{meta.cores} cores
-		</p>
+<header
+	class="flex shrink-0 items-center justify-between gap-2 border-b border-btop-line px-2 py-1 font-mono text-[11px]"
+>
+	<div class="flex min-w-0 items-center gap-2">
+		<span class="font-bold text-btop-cpu">btop</span>
+		<span class="text-btop-dim">v{meta.version}</span>
+		<span class="text-btop-dim">@{meta.hostname}</span>
+		<span class="hidden truncate text-btop-dim md:inline">{meta.cpu_name}</span>
+		<span class="text-btop-dim">up {formatUptime(meta.uptime)}</span>
 	</div>
-	<div class="flex flex-col items-end gap-0.5 text-right text-[11px]">
-		<div class="text-zinc-400">
-			<span class="text-zinc-600">v</span>{meta.version}
-			{#if meta.platform}<span class="text-zinc-600"> · {meta.platform}</span>{/if}
-			{#if meta.kernel}<span class="text-zinc-600"> · {meta.kernel}</span>{/if}
+	<div class="flex shrink-0 items-center gap-3">
+		{#if dashboard.error}
+			<span class="hidden text-btop-proc-high sm:inline" title={dashboard.error}
+				>{dashboard.error}</span
+			>
+		{/if}
+		<div class="flex items-center gap-1.5">
+			<span class={`inline-block size-1.5 rounded-full ${status.dot}`}></span>
+			<span class={status.color}>{status.text}</span>
 		</div>
-		<div class="font-mono text-zinc-500">up {formatUptime(meta.uptime)}</div>
+		{#if dashboard.lastUpdated}
+			<span class="text-btop-dim"
+				>{formatTimestamp(new Date(dashboard.lastUpdated).toISOString())}</span
+			>
+		{/if}
 	</div>
 </header>
