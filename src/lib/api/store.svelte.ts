@@ -1,20 +1,25 @@
-import { getSnapshot } from './client';
+import { getHosts, getSnapshot, type HostConfig } from './client';
 import type { BtopSnapshot } from './types';
 
 export type DashboardStatus = 'idle' | 'connecting' | 'connected' | 'error';
 
 const DEFAULT_POLL_MS = 2000;
 
-class DashboardStore {
+class HostStore {
+	config: HostConfig;
+
 	snapshot: BtopSnapshot | null = $state(null);
 	status: DashboardStatus = $state('idle');
 	error: string | null = $state(null);
 	lastUpdated: number | null = $state(null);
 
-	pollMs = $state(DEFAULT_POLL_MS);
-
+	private pollMs = DEFAULT_POLL_MS;
 	private timer: ReturnType<typeof setTimeout> | null = null;
 	private controller: AbortController | null = null;
+
+	constructor(config: HostConfig) {
+		this.config = config;
+	}
 
 	start(pollMs: number = DEFAULT_POLL_MS): void {
 		this.pollMs = pollMs;
@@ -49,7 +54,7 @@ class DashboardStore {
 		this.controller = new AbortController();
 
 		try {
-			const snapshot = await getSnapshot(this.controller.signal);
+			const snapshot = await getSnapshot(this.config, this.controller.signal);
 			this.snapshot = snapshot;
 			this.status = 'connected';
 			this.error = null;
@@ -61,6 +66,47 @@ class DashboardStore {
 		}
 
 		this.timer = setTimeout(() => void this.tick(), this.pollMs);
+	}
+}
+
+class DashboardStore {
+	hosts: HostStore[] = $state([]);
+	activeIndex = $state(0);
+
+	constructor() {
+		this.hosts = getHosts().map((config) => new HostStore(config));
+	}
+
+	get activeHost(): HostStore | undefined {
+		return this.hosts[this.activeIndex] ?? this.hosts[0];
+	}
+
+	get snapshot(): BtopSnapshot | null {
+		return this.activeHost?.snapshot ?? null;
+	}
+
+	get status(): DashboardStatus {
+		return this.activeHost?.status ?? 'idle';
+	}
+
+	get error(): string | null {
+		return this.activeHost?.error ?? null;
+	}
+
+	get lastUpdated(): number | null {
+		return this.activeHost?.lastUpdated ?? null;
+	}
+
+	select(index: number): void {
+		if (index >= 0 && index < this.hosts.length) this.activeIndex = index;
+	}
+
+	start(pollMs: number = DEFAULT_POLL_MS): void {
+		for (const host of this.hosts) host.start(pollMs);
+	}
+
+	stop(): void {
+		for (const host of this.hosts) host.stop();
 	}
 }
 

@@ -45,6 +45,18 @@
 		<span class="hidden text-xs text-app-mute md:inline">up {formatUptime(meta.uptime)}</span>
 	</div>
 	<div class="flex shrink-0 items-center gap-2.5">
+		{#if dashboard.hosts.length > 1}
+			<select
+				class="max-w-36 shrink-0 rounded-md border border-app-border bg-app-card px-1.5 py-0.5 text-[10px] font-medium text-app-dim"
+				value={dashboard.activeIndex}
+				onchange={(e) => dashboard.select(Number((e.currentTarget as HTMLSelectElement).value))}
+				aria-label="select host"
+			>
+				{#each dashboard.hosts as host, i (host.config.label)}
+					<option value={i}>{host.config.label}</option>
+				{/each}
+			</select>
+		{/if}
 		{#if dashboard.error}
 			<span class="hidden text-xs text-proc-high sm:inline" title={dashboard.error}
 				>{dashboard.error}</span

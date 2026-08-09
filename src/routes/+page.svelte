@@ -189,10 +189,11 @@
 				<span class="text-lg font-bold tracking-tight text-app-fg">btop</span>
 			</div>
 			<p class="max-w-md text-sm text-app-dim">
-				Waiting for the btop HTTP API on this server.
+				Waiting for the btop HTTP API.
 				<br />
 				Start it with <span class="font-medium text-app-fg">btop --http</span> or set
-				<span class="font-medium text-app-fg">VITE_BTOP_API_URL</span>.
+				<span class="font-medium text-app-fg">VITE_BTOP_API_URL</span> to one or more comma-separated
+				URLs.
 			</p>
 			{#if dashboard.error}
 				<p class="text-xs text-proc-high">{dashboard.error}</p>

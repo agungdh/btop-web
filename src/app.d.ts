@@ -10,8 +10,9 @@ declare global {
 	}
 
 	interface ImportMetaEnv {
-		//? Base URL of the btop API when the SPA is served separately (standalone/client-server).
-		//? Empty/undefined = same-origin (default when btop serves the bundle itself).
+		//? Comma-separated list of btop API base URLs when the SPA is served separately
+		//? (standalone/client-server). Each entry may embed basic auth as http://user:pass@host:port.
+		//? Empty/undefined = single local host on the same origin (default when btop serves the bundle itself).
 		readonly VITE_BTOP_API_URL?: string;
 	}
 }
