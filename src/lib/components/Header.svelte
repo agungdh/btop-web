@@ -3,7 +3,7 @@
 	import { dashboard } from '$lib/api/store.svelte';
 	import { formatTimestamp, formatUptime } from '$lib/api/format';
 
-	let { meta }: { meta: Meta } = $props();
+	let { meta }: { meta: Meta | undefined } = $props();
 
 	const status = $derived(
 		{
@@ -36,13 +36,15 @@
 >
 	<div class="flex min-w-0 items-center gap-2.5">
 		<span class="text-sm font-bold tracking-tight text-app-fg">btop</span>
-		<span
-			class="hidden rounded-md border border-app-border bg-app-card px-1.5 py-0.5 text-[10px] font-medium text-app-dim sm:inline"
-			>v{meta.version}</span
-		>
-		<span class="min-w-0 truncate text-sm text-app-dim">@{meta.hostname}</span>
-		<span class="hidden truncate text-xs text-app-mute lg:inline">{meta.cpu_name}</span>
-		<span class="hidden text-xs text-app-mute md:inline">up {formatUptime(meta.uptime)}</span>
+		{#if meta}
+			<span
+				class="hidden rounded-md border border-app-border bg-app-card px-1.5 py-0.5 text-[10px] font-medium text-app-dim sm:inline"
+				>v{meta.version}</span
+			>
+			<span class="min-w-0 truncate text-sm text-app-dim">@{meta.hostname}</span>
+			<span class="hidden truncate text-xs text-app-mute lg:inline">{meta.cpu_name}</span>
+			<span class="hidden text-xs text-app-mute md:inline">up {formatUptime(meta.uptime)}</span>
+		{/if}
 	</div>
 	<div class="flex shrink-0 items-center gap-2.5">
 		{#if dashboard.hosts.length > 1}

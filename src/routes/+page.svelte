@@ -131,9 +131,9 @@
 <svelte:head><title>btop · {snapshot?.meta.hostname ?? 'dashboard'}</title></svelte:head>
 
 <main class="flex h-dvh min-h-0 flex-col bg-app-bg text-app-fg">
-	{#if snapshot}
-		<Header meta={snapshot.meta} />
+	<Header meta={snapshot?.meta} />
 
+	{#if snapshot}
 		{#snippet boxFor(key: PanelKey)}
 			{#if key === 'cpu' && snapshot.cpu}
 				<BtopBox title="CPU" accent="bg-metric-cpu">
@@ -188,13 +188,20 @@
 				<span class="size-2 animate-pulse rounded-full bg-metric-cpu"></span>
 				<span class="text-lg font-bold tracking-tight text-app-fg">btop</span>
 			</div>
-			<p class="max-w-md text-sm text-app-dim">
-				Waiting for the btop HTTP API.
-				<br />
-				Start it with <span class="font-medium text-app-fg">btop --http</span> or set
-				<span class="font-medium text-app-fg">VITE_BTOP_API_URL</span> to one or more comma-separated
-				URLs.
-			</p>
+			{#if dashboard.error && dashboard.hosts.length > 1}
+				<p class="max-w-md text-sm text-app-dim">
+					This host is unreachable. Switch to another host in the header, or start
+					<span class="font-medium text-app-fg">btop --http</span> on this host.
+				</p>
+			{:else}
+				<p class="max-w-md text-sm text-app-dim">
+					Waiting for the btop HTTP API.
+					<br />
+					Start it with <span class="font-medium text-app-fg">btop --http</span> or set
+					<span class="font-medium text-app-fg">VITE_BTOP_API_URL</span> to one or more comma-separated
+					URLs.
+				</p>
+			{/if}
 			{#if dashboard.error}
 				<p class="text-xs text-proc-high">{dashboard.error}</p>
 			{/if}
