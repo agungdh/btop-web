@@ -71,10 +71,12 @@
 						>
 					</div>
 				{/if}
-				{#if gpu.gpu_clock_mhz > 0}
+				{#if (gpu.gpu_clock_mhz ?? gpu.clock_mhz ?? 0) > 0}
 					<div class="flex justify-between">
 						<span class="text-app-mute">Clock</span>
-						<span class="font-medium text-app-fg tabular-nums">{gpu.gpu_clock_mhz} MHz</span>
+						<span class="font-medium text-app-fg tabular-nums"
+							>{gpu.gpu_clock_mhz ?? gpu.clock_mhz} MHz</span
+						>
 					</div>
 				{/if}
 				{#if gpu.mem_clock_mhz > 0}

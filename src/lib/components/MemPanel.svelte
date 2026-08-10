@@ -1,18 +1,20 @@
 <script lang="ts">
 	import type { MemSection } from '$lib/api/types';
 	import { formatBytes, formatPercent } from '$lib/api/format';
+	import { normalizeMemStats } from '$lib/api/normalize';
 	import Chart from './Chart.svelte';
 	import Meter from './Meter.svelte';
 
 	let { mem }: { mem: MemSection } = $props();
 
-	const totalBytes = $derived(mem.stats.used + mem.stats.free + mem.stats.cached);
+	const stats = $derived(normalizeMemStats(mem.stats));
+	const totalBytes = $derived(stats.total);
 	const usedHistory = $derived(mem.percent.used ?? []);
-	const usedPct = $derived((mem.stats.used / Math.max(totalBytes, 1)) * 100);
-	const availPct = $derived((mem.stats.available / Math.max(totalBytes, 1)) * 100);
-	const cachedPct = $derived((mem.stats.cached / Math.max(totalBytes, 1)) * 100);
-	const freePct = $derived((mem.stats.free / Math.max(totalBytes, 1)) * 100);
-	const swapPct = $derived((mem.stats.swap_used / Math.max(mem.stats.swap_total, 1)) * 100);
+	const usedPct = $derived((stats.used / Math.max(totalBytes, 1)) * 100);
+	const availPct = $derived((stats.available / Math.max(totalBytes, 1)) * 100);
+	const cachedPct = $derived((stats.cached / Math.max(totalBytes, 1)) * 100);
+	const freePct = $derived((stats.free / Math.max(totalBytes, 1)) * 100);
+	const swapPct = $derived((stats.swap_used / Math.max(stats.swap_total, 1)) * 100);
 </script>
 
 <div class="flex h-full flex-col gap-2.5">
@@ -33,7 +35,7 @@
 			mid="#f43f5e"
 			end="#f43f5e"
 			height={5}
-			valueText={`${formatBytes(mem.stats.used)} (${formatPercent(usedPct, 1)})`}
+			valueText={`${formatBytes(stats.used)} (${formatPercent(usedPct, 1)})`}
 		/>
 		<Meter
 			value={availPct}
@@ -42,7 +44,7 @@
 			mid="#f59e0b"
 			end="#f59e0b"
 			height={5}
-			valueText={`${formatBytes(mem.stats.available)} (${formatPercent(availPct, 1)})`}
+			valueText={`${formatBytes(stats.available)} (${formatPercent(availPct, 1)})`}
 		/>
 		<Meter
 			value={cachedPct}
@@ -51,7 +53,7 @@
 			mid="#38bdf8"
 			end="#38bdf8"
 			height={5}
-			valueText={`${formatBytes(mem.stats.cached)} (${formatPercent(cachedPct, 1)})`}
+			valueText={`${formatBytes(stats.cached)} (${formatPercent(cachedPct, 1)})`}
 		/>
 		<Meter
 			value={freePct}
@@ -60,9 +62,9 @@
 			mid="#34d399"
 			end="#34d399"
 			height={5}
-			valueText={`${formatBytes(mem.stats.free)} (${formatPercent(freePct, 1)})`}
+			valueText={`${formatBytes(stats.free)} (${formatPercent(freePct, 1)})`}
 		/>
-		{#if mem.stats.swap_total > 0}
+		{#if stats.swap_total > 0}
 			<div class="border-t border-app-border pt-2">
 				<Meter
 					value={swapPct}
@@ -71,7 +73,7 @@
 					mid="#c084fc"
 					end="#c084fc"
 					height={5}
-					valueText={`${formatBytes(mem.stats.swap_used)} / ${formatBytes(mem.stats.swap_total)}`}
+					valueText={`${formatBytes(stats.swap_used)} / ${formatBytes(stats.swap_total)}`}
 				/>
 			</div>
 		{/if}

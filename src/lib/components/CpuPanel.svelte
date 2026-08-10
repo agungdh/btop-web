@@ -55,7 +55,7 @@
 				</div>
 			</div>
 		{/if}
-		{#if cpu.battery.charge >= 0}
+		{#if cpu.battery.charge > 0 || cpu.battery.status}
 			<div class="rounded-xl border border-app-border bg-app-card2 px-2.5 py-1.5">
 				<div class="text-[10px] font-medium tracking-wide text-app-mute uppercase">Battery</div>
 				<div class="mt-0.5 truncate text-[13px] font-semibold text-app-fg tabular-nums">

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Disk } from '$lib/api/types';
 	import { formatBytes, formatPercent, last } from '$lib/api/format';
+	import { diskKey } from '$lib/api/normalize';
 	import Meter from './Meter.svelte';
 
 	let { disks }: { disks: Disk[] } = $props();
@@ -10,7 +11,7 @@
 	{#if disks.length === 0}
 		<div class="flex flex-1 items-center justify-center text-xs text-app-mute">no disks</div>
 	{/if}
-	{#each disks as disk, i (disk.dev)}
+	{#each disks as disk, i (diskKey(disk, i))}
 		<div class="flex flex-col gap-1.5">
 			<div class="flex items-baseline justify-between gap-2">
 				<span class="truncate text-sm font-semibold text-app-fg">{disk.name || disk.dev}</span>
@@ -29,7 +30,7 @@
 				valueText=""
 			/>
 			<div class="flex justify-between text-[10px] text-app-mute tabular-nums">
-				<span>{disk.dev}</span>
+				<span>{disk.dev ?? ''}</span>
 				<span>
 					<span style:color="#2dd4bf">↓ {formatBytes(last(disk.io_read))}/s</span>
 					<span class="mx-1 text-app-mute">·</span>

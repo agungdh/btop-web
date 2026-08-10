@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { dashboard } from '$lib/api/store.svelte';
 	import { formatPercent, formatSpeed, last } from '$lib/api/format';
+	import { totalMemBytes } from '$lib/api/normalize';
 	import Header from '$lib/components/Header.svelte';
 	import BtopBox from '$lib/components/BtopBox.svelte';
 	import CpuPanel from '$lib/components/CpuPanel.svelte';
@@ -26,11 +27,7 @@
 	}
 
 	const snapshot = $derived(dashboard.snapshot);
-	const memTotal = $derived(
-		snapshot?.mem
-			? snapshot.mem.stats.used + snapshot.mem.stats.free + snapshot.mem.stats.cached
-			: 0
-	);
+	const memTotal = $derived(snapshot?.mem ? totalMemBytes(snapshot.mem.stats) : 0);
 	const hasGpu = $derived(!!snapshot?.gpu && snapshot.gpu.length > 0);
 
 	const cpuPct = $derived(snapshot?.cpu ? last(snapshot.cpu.percent.total ?? []) : 0);

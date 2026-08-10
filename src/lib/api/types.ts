@@ -38,16 +38,24 @@ export interface MemStats {
 	used: number;
 	available: number;
 	cached: number;
-	free: number;
-	swap_total: number;
-	swap_used: number;
-	swap_free: number;
+	//? Linux
+	free?: number;
+	swap_total?: number;
+	swap_used?: number;
+	swap_free?: number;
+	//? Windows
+	total?: number;
+	page_total?: number;
+	page_used?: number;
+	page_free?: number;
+	commit?: number;
+	commit_total?: number;
 }
 
 export interface Disk {
-	dev: string;
+	dev?: string;
 	name: string;
-	fstype: string;
+	fstype?: string;
 	total: number;
 	used: number;
 	free: number;
@@ -144,6 +152,9 @@ export interface GpuSection {
 	pcie_rx_kbs: number;
 	encoder_utilization: number;
 	decoder_utilization: number;
+	//? Windows (btop4win) naming
+	clock_mhz?: number;
+	vram_free?: number;
 }
 
 export interface BtopSnapshot {
